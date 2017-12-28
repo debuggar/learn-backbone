@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+	$("button").click(function(){
+		var name=$("input[name='name']").val();
+		var country=$("input[name='country']").val();
+	    $.post("/",
+	    {
+	        name: name,
+	        country: country
+	    },
+	    function(data, status){
+	        // console.log("Data: " + data + "\nStatus: " + status);
+	    });
+	});
+});	
+
+</script>
+
+<div>
+  First name:<br>
+  <input type="text" name="name" value="">
+  <br>
+  Country:<br>
+  <input type="text" name="country" value="">
+  <br><br>
+  <button type="button">Submit</button> 
+</div> 
+
+</body>
+</html>
