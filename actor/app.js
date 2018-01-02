@@ -3,42 +3,62 @@ var app = express();
 
 app.use(express.bodyParser());
 
-var personality=[];
+var actor=[];
 
-personality.push({
+actor.push({
 	id:1,
-	name:'A. P. J. Abdul Kalam',
+	name:'Aishwarya Rai',
 	country:'India'
 });
-personality.push({
+actor.push({
 	id:2,
-	name:'Barack Obama',
-	country:'USA'
-})
+	name:'Deepika Padukone',
+	country:'Indian'
+});
 var id=3;
 
 app.use('/', express.static(__dirname + '/public'));
 
 app.get('/list', function (req, res) {
    console.log("GET request");
-   res.send( JSON.stringify(personality) );
+   res.setHeader('Content-Type', 'application/json');
+   res.send( JSON.stringify(actor) );
 })
 
 app.post('/', function (req, res) {
     console.log("POST request");
-    personality.push({
+    var actress_name=req.body.name;
+    var obj = actor.find(o => o.name ===actress_name );
+    var idx = actor.indexOf( obj );
+
+    actor[idx].details=req.body.name   
+
+    actor.push({
         id:id,
         name:req.body.name,
         Country:req.body.country
     })
-
-   res.send( JSON.stringify(personality) );
+    id++;
+   res.setHeader('Content-Type', 'application/json'); 
+   res.send( JSON.stringify(actor) );
 })
 
+app.put('/name', function (req, res) {
+     console.log('put request');
+     var actress_name=req.body.name;
+     var obj = actor.find(o => o.name ===actress_name );
+     var idx = actor.indexOf(obj);
+     actor[idx].details=req.body.detail;
+});
+
+
 app.delete('/delete', function (req, res) {
-   console.log("DELETE request");
-   personality=[];
-   res.send('DELETED everything');
+    console.log("DELETE request");
+    var actress_name=req.body.name;
+    var obj = actor.find(o => o.name ===actress_name );
+    var idx = actor.indexOf(obj);
+    actor.splice(idx, 1);
+    res.send('sucessful delete');
 })
 
 var server = app.listen(8080, function () {
@@ -46,5 +66,5 @@ var server = app.listen(8080, function () {
    var host = server.address().address
    var port = server.address().port
 
-   console.log("Personality app started at http://%s:%s", host, port)
+   console.log("actor app started at http://%s:%s", host, port)
 })

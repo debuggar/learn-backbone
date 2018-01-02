@@ -4,31 +4,99 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script>
 $(document).ready(function(){
-	$("button").click(function(){
+
+	$("button#post").click(function(){
 		var name=$("input[name='name']").val();
 		var country=$("input[name='country']").val();
 	    $.post("/",
 	    {
 	        name: name,
-	        country: country
+	        country: country 	        
 	    },
 	    function(data, status){
 	        // console.log("Data: " + data + "\nStatus: " + status);
 	    });
 	});
+
+	var personalityList;
+    $.get("/list", function(data, status){
+        console.log("Data: " + JSON.stringify(data) + "\nStatus: " + status);
+        personalityList=data; 
+        for(var x in personalityList){
+            $('#name-personality').append( new Option(personalityList[x].name,personalityList[x].name ) );
+            $('#name-personality2').append( new Option(personalityList[x].name,personalityList[x].name ) );
+        }
+    });
+
+    $("button#put").click(function(){
+        var actress_name=$("#name-personality").val();
+        var actress_detail=$("#detail").val();
+        var data={
+        	name : actress_name,
+        	detail:actress_detail
+        };
+        $.ajax({
+		  url: 'name',
+		  type: 'PUT',
+		  data : data,
+		  success: function(data) {
+		    
+		    console.log('successful put request');
+		  }
+		});
+    });
+
+	 $("button#Delete").click(function(){
+	        var actress_name=$("#name-personality2").val();
+	        var actress_detail=$("#detail").val();
+	        var data={
+	        	name : actress_name
+	        };
+	        $.ajax({
+			  url: '/delete',
+			  type: 'DELETE',
+			  data : data,
+			  success: function(data) {
+            	    console.log('successful delete request '+data);
+			  }
+			});
+	  });
+
 });	
 
 </script>
 
 <div>
-  First name:<br>
+  <h3>Add info about new Actress</h3>
+  Name of Actress:<br>
   <input type="text" name="name" value="">
   <br>
   Country:<br>
   <input type="text" name="country" value="">
   <br><br>
-  <button type="button">Submit</button> 
+  <button id="post" type="button">Submit</button>
 </div> 
+
+<div>
+  <h3 style="margin-bottom: 5px;">Update Existing List</h3>
+  Name :<br>
+  <select id="name-personality" name="Name" style="width: 172px;background: transparent">
+  </select>
+  <br>Brief Detail:<br>
+  <textarea rows="4" cols="50"  id="detail">
+  </textarea><br>
+  <button id="put" type="button">Submit</button>
+</div>
+
+<div>
+  <h3 style="margin-bottom: 2px;">Delete List</h3>
+  Name :<br>
+  <select id="name-personality2" name="Name" style="width: 172px;background: transparent">
+  </select>
+  <button id="Delete" type="button">Submit</button>
+
+</div>
+
 
 </body>
 </html>
