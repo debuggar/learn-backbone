@@ -15,23 +15,30 @@ actor.push({
 	name:'Deepika Padukone',
 	country:'Indian'
 });
-var id=3;
+actor.push({
+    id:3,
+    name:'Kriti Sanoon',
+    country:'Indian'
+});
+
+var id=4;
 
 app.use('/', express.static(__dirname + '/public'));
 
 app.get('/list', function (req, res) {
    console.log("GET request");
-   res.setHeader('Content-Type', 'application/json');
-   res.send( JSON.stringify(actor) );
+  /*res.setHeader('Content-Type', 'application/json');
+  res.send( JSON.stringify(actor) );*/
+     res.send( actor );
 })
 
-app.post('/', function (req, res) {
+app.post('/list', function (req, res) {
     console.log("POST request");
-    var actress_name=req.body.name;
+    /*var actress_name=req.body.name;
     var obj = actor.find(o => o.name ===actress_name );
     var idx = actor.indexOf( obj );
 
-    actor[idx].details=req.body.name   
+    actor[idx].details=req.body.name   */
 
     actor.push({
         id:id,
@@ -43,22 +50,25 @@ app.post('/', function (req, res) {
    res.send( JSON.stringify(actor) );
 })
 
-app.put('/name', function (req, res) {
-     console.log('put request');
+app.put('/list/:id', function (req, res) {
+     console.log('Put request');
      var actress_name=req.body.name;
      var obj = actor.find(o => o.name ===actress_name );
      var idx = actor.indexOf(obj);
-     actor[idx].details=req.body.detail;
+     actor[idx].details=req.body.details;
+     res.send(JSON.stringify(actor));
 });
 
 
-app.delete('/delete', function (req, res) {
+app.delete('/list/:id', function (req, res) {
     console.log("DELETE request");
     var actress_name=req.body.name;
     var obj = actor.find(o => o.name ===actress_name );
     var idx = actor.indexOf(obj);
+    if( actress_name=== undefined )
+        idx=req.params.id-1;
     actor.splice(idx, 1);
-    res.send('sucessful delete');
+    res.send(actor);
 })
 
 var server = app.listen(8080, function () {
